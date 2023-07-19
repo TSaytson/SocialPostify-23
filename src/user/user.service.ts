@@ -1,8 +1,8 @@
 import { HttpException, Injectable } from '@nestjs/common';
 import { CreateUserDTO } from './dto/create-user.dto';
-import { UserRepository } from './user.repository';
 import * as bcrypt from 'bcrypt';
 import { SignInUserDTO } from './dto/signIn-user.dto';
+import { UserRepository } from './repository/user.repository';
 
 @Injectable()
 export class UserService {
@@ -21,6 +21,7 @@ export class UserService {
     if (!userFound || 
       !bcrypt.compareSync(user.password, userFound.password))
       throw new HttpException('Incorrect credentials', 401);
+    delete userFound.password;
     return userFound;
   }
 }

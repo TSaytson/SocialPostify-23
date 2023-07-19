@@ -20,3 +20,15 @@ model User {
 
   @@map("users")
 }
+
+model Publication {
+  id            Int      @id @default(autoincrement())
+  image         String
+  title         String   @unique
+  text          String
+  dateToPublish DateTime
+  published     Boolean @default(false)
+  socialMedia   String
+
+  @@map("publications")
+}

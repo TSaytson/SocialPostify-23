@@ -7,18 +7,20 @@ export class PublicationService {
 
   constructor(private readonly publicationRepository: PublicationRepository) { }
 
-  async createPublication(publication: CreatePublicationDTO) {
+  async createPublication(body: CreatePublicationDTO, userId:number) {
     const publicationFound =
-      await this.publicationRepository.findPublicationByTitle(publication.title);
+      await this.publicationRepository.findPublicationByTitle(body.title);
     
     if (publicationFound) throw new ConflictException('Publication already exists');
 
-    const formatedDate = new Date(publication.dateToPublish);
-
-    return this.publicationRepository.createPublication({...publication, dateToPublish:formatedDate});
+    const formatedDate = new Date(body.dateToPublish);
+    
+    const publication = { ...body, dateToPublish: formatedDate, userId };
+    
+    return this.publicationRepository.createPublication(publication);
   }
 
-  async findAllPublications() {
-    return this.publicationRepository.findAllPublications();
+  async findAllPublications(userId:number) {
+    return this.publicationRepository.findAllPublications(userId);
   }
 }

@@ -1,5 +1,5 @@
 import { Transform, TransformFnParams } from "class-transformer";
-import { IsBoolean, IsDate, IsISO8601, IsNotEmpty, IsOptional, IsString, IsUrl } from "class-validator";
+import { IsBoolean, IsISO8601, IsNotEmpty, IsOptional, IsString, IsUrl } from "class-validator";
 
 export class CreatePublicationDTO{
   

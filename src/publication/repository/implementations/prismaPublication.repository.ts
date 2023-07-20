@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
+import { Publication } from "@prisma/client";
 import { PrismaService } from "src/prisma/prisma.service";
-import { CreatePublicationDTO } from "src/publication/dto/create-publication.dto";
 import { PublicationRepository } from "../publication.repository";
 
 @Injectable()
@@ -8,14 +8,16 @@ export class PrismaPublicationRepository implements PublicationRepository{
 
   constructor(private readonly prisma: PrismaService) { }
 
-  async createPublication(publication: CreatePublicationDTO){
+  async createPublication(publication: Publication){
     return await this.prisma.publication.create({
       data: publication
     })
   }
 
-  async findAllPublications() {
-    return await this.prisma.publication.findMany();
+  async findAllPublications(userId:number) {
+    return await this.prisma.publication.findMany({
+      where: {userId}
+    });
   }
 
   async findPublicationByTitle(title: string) {

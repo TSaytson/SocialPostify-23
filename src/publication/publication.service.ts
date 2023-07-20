@@ -10,10 +10,12 @@ export class PublicationService {
   async createPublication(publication: CreatePublicationDTO) {
     const publicationFound =
       await this.publicationRepository.findPublicationByTitle(publication.title);
-    console.log(publication);
+    
     if (publicationFound) throw new ConflictException('Publication already exists');
-    console.log(publication);
-    return this.publicationRepository.createPublication(publication);
+
+    const formatedDate = new Date(publication.dateToPublish);
+
+    return this.publicationRepository.createPublication({...publication, dateToPublish:formatedDate});
   }
 
   async findAllPublications() {

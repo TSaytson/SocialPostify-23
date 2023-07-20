@@ -7,17 +7,8 @@ import { UserService } from './user.service';
 export class UserController {
   constructor(private readonly userService: UserService) { }
   
-  @Post('user')
+  @Post('register')
   addUser(@Body() body: CreateUserDTO) {
     return this.userService.createUser(body);
-  }
-
-  @Post('signin')
-  @HttpCode(200)
-  signIn(@Body() body: SignInUserDTO) {
-    this.userService.signIn(body);
-    return {
-      message: `Successful login`
-    }
   }
 }

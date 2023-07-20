@@ -1,4 +1,4 @@
-import { HttpException, Injectable } from '@nestjs/common';
+import { HttpException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { CreateUserDTO } from './dto/create-user.dto';
 import * as bcrypt from 'bcrypt';
 import { SignInUserDTO } from './dto/signIn-user.dto';
@@ -12,16 +12,25 @@ export class UserService {
     const userFound = await this.usersRepository.findUserByEmail(user.email);
     if (userFound) throw new HttpException('User already registred', 409);
     const hashedPassword = bcrypt.hashSync(user.password, 10);
-    await this.usersRepository.createUser({ ...user, password: hashedPassword });
+    return await this.usersRepository.createUser({ ...user, password: hashedPassword });
   }
 
-  async signIn(user: SignInUserDTO) {
+  async findUser(user: SignInUserDTO) {
     const userFound =
       await this.usersRepository.findUserByEmail(user.email);
     if (!userFound || 
       !bcrypt.compareSync(user.password, userFound.password))
-      throw new HttpException('Incorrect credentials', 401);
+      throw new UnauthorizedException('Incorrect credentials');
     delete userFound.password;
     return userFound;
+  }
+
+  async findUserById(id: number) {
+    const user =
+      await this.usersRepository.findUserById(id);
+    if (!user)
+      throw new NotFoundException('User not found');
+
+    return user;
   }
 }
